@@ -128,7 +128,7 @@
   </style>
 </head>
 <body>
-  <header>Leksands Norra VVO (v0.06)<br>Viltrapportering 2025/26</header>
+  <header>Leksands Norra VVO (v0.07)<br>Viltrapportering 2025/26</header>
   
   <main>
     <form action="https://formsubmit.co/30b41957a9043b0e302e187be2c809e4" method="POST">
@@ -319,9 +319,9 @@
 
   let reportText = "";
   if (reportParts.length > 0) {
-    reportText = `Tobias har skjutit följande vilt:<br><br>${reportParts.join("<br>")}`;
+    reportText = `${name} har rapporterat in följande vilt:<br><br>${reportParts.join("<br>")}`;
   } else {
-    reportText = `Tobias har inte rapporterat in något skjutet vilt denna gång.`;
+    reportText = `${name} har inte rapporterat in något skjutet vilt denna gång.`;
   }
 
   const fullReport = `<strong>Viltrapport från ${name}</strong><br><br>${reportText}`;
