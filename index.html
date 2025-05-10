@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Leksands Norra VVO - Viltrapportering</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: url('ikoner_vvo/skog_bg.webp') no-repeat center center fixed;
+      background-size: cover;
+      color: #2e2e2e;
+    }
+
+    header {
+      background-color: #63749e;
+      color: white;
+      text-align: center;
+      padding: 1.2em 0;
+      font-size: 2em;
+      font-weight: bold;
+      letter-spacing: 1px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    }
+
+    main {
+      max-width: 900px;
+      margin: 2em auto;
+      padding: 2em;
+      background-color: #9ca6be;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2em;
+    }
+
+    label {
+      font-weight: 600;
+    }
+
+    input[type="text"],
+    input[type="tel"],
+    input[type="email"] {
+      padding: 0.7em;
+      font-size: 1em;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background-color: #f9f9f9;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    }
+
+    .animal-group {
+      margin-top: 2em;
+    }
+
+    .group-title {
+      font-size: 1.3em;
+      margin-bottom: 0.7em;
+      font-weight: bold;
+      color: #222244;
+      border-bottom: 2px solid #dcdcdc;
+      padding-bottom: 0.2em;
+    }
+
+    .animals {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 1em;
+    }
+
+    .animal {
+      background-color: #ffffff;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      padding: 0.6em;
+      text-align: center;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+      transition: transform 0.2s ease;
+      font-size: 1.1em;
+    }
+
+    .animal:hover {
+      transform: scale(1.02);
+    }
+
+    .animal img {
+      width: 36px;
+      height: 36px;
+    }
+
+    .animal input[type="number"] {
+      width: 60px;
+      text-align: center;
+      margin-top: 0.1em;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      padding: 0.1em;
+      font-size: 2.0em;
+    }
+
+    .sex-inputs label {
+      display: block;
+      font-size: 0.6em;
+      margin-top: 0.3em;
+    }
+
+    button {
+      margin-top: 2em;
+      padding: 1em;
+      background-color: #3b5323;
+      color: white;
+      font-size: 1.1em;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #2d401a;
+    }
+  </style>
+</head>
+<body>
+  <header>Leksands Norra VVO<br>Viltrapportering 2025/26</header>
+  
+  <main>
+    <form action="https://formsubmit.co/30b41957a9043b0e302e187be2c809e4" method="POST">
+      
+      <label for="phone">Namn:</label>
+      <input type="text" id="name" name="name" required />
+
+      <label for="phone">Telefonnummer:</label>
+      <input type="tel" id="phone" name="phone" required />
+
+      <label for="email">E-postadress:</label>
+      <input type="email" id="email" name="email" required />
+
+      <!-- Djurgrupper -->
+      <div class="animal-group">
+        <div class="group-title">Klövvilt</div>
+        <div class="animals" id="ungulatesGroup"></div>
+      </div>
+
+      <div class="animal-group">
+        <div class="group-title">Rovdjur</div>
+        <div class="animals" id="predatorsGroup"></div>
+      </div>
+
+      <div class="animal-group">
+        <div class="group-title">Hardjur</div>
+        <div class="animals" id="haresGroup"></div>
+      </div>
+
+      <div class="animal-group">
+        <div class="group-title">Vattenfåglar</div>
+        <div class="animals" id="waterBirdsGroup"></div>
+      </div>
+
+      <div class="animal-group">
+        <div class="group-title">Rovfåglar</div>
+        <div class="animals" id="birdsOfPreyGroup"></div>
+      </div>
+
+      <div class="animal-group">
+        <div class="group-title">Skogsfåglar</div>
+        <div class="animals" id="forestBirdsGroup"></div>
+      </div>
+
+      <div class="animal-group">
+        <div class="group-title">Småfåglar</div>
+        <div class="animals" id="smallBirdsGroup"></div>
+      </div>
+
+      <div class="animal-group">
+        <div class="group-title">Andra fåglar</div>
+        <div class="animals" id="otherBirdsGroup"></div>
+      </div>
+
+      <div class="animal-group">
+        <div class="group-title">Övriga djur</div>
+        <div class="animals" id="otherGroup"></div>
+      </div>
+
+      <button type="submit">Avrapportera vilt</button>
+    </form>
+  </main>
+
+  <script>
+    const animals = {
+      ungulatesGroup: ["Dovhjort", "Kronhjort", "Rådjur", "Vildsvin", "Älg"],
+      predatorsGroup: ["Björn", "Grävling", "Iller", "Mink", "Mård", "Rödräv", "Vessla"],
+      haresGroup: ["Fälthare", "Skogshare", "Vildkanin"],
+      waterBirdsGroup: ["Bläsand", "Bläsgås", "Grågås", "Gräsand", "Knipa", "Kricka", "Sjöorre", "Storskrake", "Sångsvan", "Vigg", "Vitkindad gås"],
+      birdsOfPreyGroup: ["Korp"],
+      forestBirdsGroup: ["Dalripa", "Fjällripa", "Järpe", "Orre", "Tjäder"],
+      smallBirdsGroup: ["Björktrast", "Fiskmås", "Gråtrut", "Havstrut", "Kaja", "Kråka", "Morkulla", "Nötskrika", "Rapphöna", "Ringduva", "Skata", "Storskarv", "Trana"],
+      otherBirdsGroup: ["Fasan", "Kanadagås"],
+      otherGroup: ["Bäver"]
+    };
+
+    for (const [groupId, species] of Object.entries(animals)) {
+      const container = document.getElementById(groupId);
+      species.forEach(speciesName => {
+        const div = document.createElement("div");
+        div.className = "animal";
+
+        const isWithSexSplit = ["Älg", "Rådjur", "Dovhjort", "Kronhjort"].includes(speciesName);
+
+        let inputsHtml = '';
+        if (isWithSexSplit) {
+          inputsHtml = `
+            <div class="sex-inputs">
+              <label>Handjur <input type="number" min="0" value="0" name="${speciesName}_Handjur" /></label>
+              <label>Hondjur <input type="number" min="0" value="0" name="${speciesName}_Hondjur" /></label>
+              <label>Ungdjur <input type="number" min="0" value="0" name="${speciesName}_Ungdjur" /></label>
+            </div>
+          `;
+        } else {
+          inputsHtml = `
+            <div class="sex-inputs">
+              <label>Handjur <input type="number" min="0" value="0" name="${speciesName}_Handjur" /></label>
+              <label>Hondjur <input type="number" min="0" value="0" name="${speciesName}_Hondjur" /></label>
+            </div>
+          `;
+        }
+
+        div.innerHTML = `
+          <img src="ikoner_vvo/${speciesName}.png" alt="${speciesName}" />
+          <div>${speciesName}</div>
+          ${inputsHtml}
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    document.getElementById("reportForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      const formData = new FormData(this);
+      const name = formData.get("name");
+      const phone = formData.get("phone");
+      const email = formData.get("email");
+
+      const allSpecies = Object.entries(animals).flatMap(([_, list]) => list);
+
+      let report = `Viltrapport från ${name}\nTelefon: ${phone}\nE-post: ${email}\n\nFällda djur:\n`;
+
+      allSpecies.forEach(species => {
+        const categories = ["Hondjur", "Handjur"];
+        if (["Älg", "Rådjur", "Dovhjort", "Kronhjort"].includes(species)) {
+          categories.push("Ungdjur");
+        }
+
+        let speciesReported = false;
+        let speciesLine = `- ${species}: `;
+
+        const parts = categories.map(cat => {
+          const key = `${species}_${cat}`;
+          const value = parseInt(formData.get(key)) || 0;
+          if (value > 0) {
+            speciesReported = true;
+            return `${cat.toLowerCase()} ${value}`;
+          }
+          return null;
+        }).filter(Boolean);
+
+        if (speciesReported) {
+          speciesLine += parts.join(", ");
+        } else {
+          speciesLine += "Inget rapporterat";
+        }
+
+        report += speciesLine + "\n";
+      });
+    });
+
+  </script>
+</body>
+</html>
