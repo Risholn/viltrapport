@@ -293,54 +293,47 @@
       });
     }
 
-    document.querySelector("form").addEventListener("submit", function (e) {
-  e.preventDefault();
-  const formData = new FormData(this);
-  const name = formData.get("name");
-  const phone = formData.get("phone");
-  const email = formData.get("email");
+  document.querySelector("form").addEventListener("submit", function (e) {
+  e.preventDefault();
+  const formData = new FormData(this);
+  const name = formData.get("name");
 
-  let report = `<strong>Viltrapport från ${name}</strong><br>
-  Telefon: ${phone}<br>
-  E-post: ${email}<br><br>`;
+  let reportParts = [];
 
-  for (const [groupName, speciesList] of Object.entries(animals)) {
-    const groupTitleElement = document.querySelector(`#${groupName}`).closest(".animal-group").querySelector(".group-title");
-    const groupTitle = groupTitleElement ? groupTitleElement.textContent : groupName;
+  for (const [groupName, speciesList] of Object.entries(animals)) {
+    speciesList.forEach(species => {
+      const handjur = parseInt(formData.get(`${species}_Handjur`)) || 0;
+      const hondjur = parseInt(formData.get(`${species}_Hondjur`)) || 0;
+      const ungdjur = parseInt(formData.get(`${species}_Ungdjur`)) || 0;
+      const total = handjur + hondjur + ungdjur;
 
-    let groupReport = "";
-    speciesList.forEach(species => {
-      const categories = ["Handjur", "Hondjur"];
-      if (["Älg", "Rådjur", "Dovhjort", "Kronhjort"].includes(species)) {
-        categories.push("Ungdjur");
-      }
+      if (total > 0) {
+        let parts = [];
+        if (handjur > 0) parts.push(`${handjur} handjur`);
+        if (hondjur > 0) parts.push(`${hondjur} hondjur`);
+        if (ungdjur > 0) parts.push(`${ungdjur} ungdjur`);
+        reportParts.push(`${species} - ${total} st (${parts.join(" och ")})`);
+      }
+    });
+  }
 
-      const parts = categories.map(cat => {
-        const key = `${species}_${cat}`;
-        const value = parseInt(formData.get(key)) || 0;
-        if (value > 0) {
-          return `<span style="color:red">${cat} (${value})</span>`;
-        } else {
-          return `${cat} (0)`;
-        }
-      });
+  let reportText = "";
+  if (reportParts.length > 0) {
+    reportText = `Tobias har skjutit följande vilt:<br><br>${reportParts.join("<br>")}`;
+  } else {
+    reportText = `Tobias har inte rapporterat in något skjutet vilt denna gång.`;
+  }
 
-      groupReport += `${species}: ${parts.join(", ")}<br>`;
-    });
+  const fullReport = `<strong>Viltrapport från ${name}</strong><br><br>${reportText}`;
 
-    if (groupReport.trim()) {
-      report += `<strong>${groupTitle}</strong><br>${groupReport}<br>`;
-    }
-  }
+  // Skapa ett dolt inputfält som innehåller HTML-versionen av rapporten
+  const hiddenInput = document.createElement("input");
+  hiddenInput.type = "hidden";
+  hiddenInput.name = "_html";
+  hiddenInput.value = fullReport;
+  this.appendChild(hiddenInput);
 
-  // Skapa ett dolt inputfält som innehåller HTML-versionen av rapporten
-  const hiddenInput = document.createElement("input");
-  hiddenInput.type = "hidden";
-  hiddenInput.name = "_html";
-  hiddenInput.value = report;
-  this.appendChild(hiddenInput);
-
-  this.submit(); // Skicka formuläret manuellt efter att ha lagt till det dolda fältet
+  this.submit(); // Skicka formuläret manuellt efter att ha lagt till det dolda fältet
 });
 
 
