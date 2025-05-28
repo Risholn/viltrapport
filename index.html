@@ -182,7 +182,7 @@
   </style>
 </head>
 <body>
-  <header>Leksands Norra VVO (v0.08)<br>Viltrapportering 2025/26</header>
+  <header>Leksands Norra VVO (v0.09)<br>Viltrapportering 2025/26</header>
   
   <main>
     <form action="https://formsubmit.co/30b41957a9043b0e302e187be2c809e4" method="POST">
@@ -227,12 +227,12 @@
       </div>
 
       <div class="animal-group">
-        <div class="group-title">Småfåglar & Övriga Rapporthönsfåglar</div>
-        <div class="animals" id="smallAndOtherReportableBirdsGroup"></div>
+        <div class="group-title">Småfåglar</div>
+        <div class="animals" id="smallBirdsGroup"></div>
       </div>
 
       <div class="animal-group">
-        <div class="group-title">Andra fåglar (ej specificerad rapportering)</div>
+        <div class="group-title">Andra fåglar</div>
         <div class="animals" id="otherBirdsGroup"></div>
       </div>
       
@@ -246,19 +246,21 @@
   </main>
 
   <script>
-    // Helper to map display names to icon filenames (Swedish characters replaced)
+    // Helper to map display names to icon filenames (reverted to original)
     const filenameMap = {
       "Älg": "Alg", "Rådjur": "Radjur", "Dovhjort": "Dovhjort", "Kronhjort": "Kronhjort", "Vildsvin": "Vildsvin",
-      "Björn": "Bjorn", "Grävling": "Gravling", "Iller": "Iller", "Mink": "Mink", "Mård": "Mard", "Rödräv": "Rodrav", "Vessla": "Vessla", "Lodjur": "Lodjur", "Varg": "Varg", // Added Lodjur, Varg
+      "Björn": "Bjorn", "Grävling": "Gravling", "Iller": "Iller", "Mink": "Mink", "Mård": "Mard", "Rödräv": "Rodrav", "Vessla": "Vessla",
       "Fälthare": "Falthare", "Skogshare": "Skogshare", "Vildkanin": "Vildkanin",
-      "Bläsand": "Blasand", "Bläsgås": "Blasgas", "Grågås": "Gragas", "Gräsand": "Grasand", "Knipa": "Knipa", "Kricka": "Kricka", "Sjöorre": "Sjoorre", "Storskrake": "Storskrake", "Sångsvan": "Sangsvan", "Vigg": "Vigg", "Vitkindad gås": "VitkindadGas", "Kanadagås": "Kanadagas", // Moved Kanadagås here
-      "Korp": "Korp", "Ormvråk": "Ormvrak", "Fiskgjuse": "Fiskgjuse", "Duvhök": "Duvhok", "Sparvhök": "Sparvhok", "Kungsörn": "Kungsorn", "Havsörn": "Havsorn", // Added more Rovfåglar
+      "Bläsand": "Blasand", "Bläsgås": "Blasgas", "Grågås": "Gragas", "Gräsand": "Grasand", "Knipa": "Knipa", "Kricka": "Kricka", "Sjöorre": "Sjoorre", "Storskrake": "Storskrake", "Sångsvan": "Sangsvan", "Vigg": "Vigg", "Vitkindad gås": "VitkindadGas",
+      "Korp": "Korp",
       "Dalripa": "Dalripa", "Fjällripa": "Fjallripa", "Järpe": "Jarpe", "Orre": "Orre", "Tjäder": "Tjader",
-      "Björktrast": "Bjorktrast", "Fiskmås": "Fiskmas", "Gråtrut": "Gratrut", "Havstrut": "Havstrut", "Kaja": "Kaja", "Kråka": "Kraka", "Morkulla": "Morkulla", "Nötskrika": "Notskrika", "Rapphöna": "Rapphona", "Ringduva": "Ringduva", "Skata": "Skata", "Storskarv": "Storskarv", "Trana": "Trana", "Fasan": "Fasan", // Moved Fasan here
-      "Bäver": "Baver", "Bisam": "Bisam", "Mårdhund": "Mardhund", "Säl": "Sal" // Added more Övriga
+      "Björktrast": "Bjorktrast", "Fiskmås": "Fiskmas", "Gråtrut": "Gratrut", "Havstrut": "Havstrut", "Kaja": "Kaja", "Kråka": "Kraka", "Morkulla": "Morkulla", "Nötskrika": "Notskrika", "Rapphöna": "Rapphona", "Ringduva": "Ringduva", "Skata": "Skata", "Storskarv": "Storskarv", "Trana": "Trana",
+      "Fasan": "Fasan", "Kanadagås": "Kanadagas",
+      "Bäver": "Baver"
     };
 
     // Defines which species have sex differentiation and weight inputs
+    // This remains consistent as Klövvilt and Björn are in the original list
     const detailedSpeciesInfo = {
       // Klövvilt
       "Älg": { sexes: ['Handjur', 'Hondjur', 'Ungdjur'], hasWeight: true },
@@ -271,17 +273,17 @@
       // Other species will default to a single "Antal" input
     };
 
-    // Animal species categorized by group
+    // Animal species categorized by group (reverted to original)
     const animalsByGroup = {
-      ungulatesGroup: ["Älg", "Rådjur", "Dovhjort", "Kronhjort", "Vildsvin"],
-      predatorsGroup: ["Björn", "Lodjur", "Varg", "Rödräv", "Grävling", "Mård", "Mink", "Iller", "Vessla"],
-      haresGroup: ["Skogshare", "Fälthare", "Vildkanin"],
-      waterBirdsGroup: ["Gräsand", "Kricka", "Bläsand", "Knipa", "Vigg", "Sjöorre", "Storskrake", "Grågås", "Kanadagås", "Bläsgås", "Vitkindad gås", "Sångsvan"],
-      birdsOfPreyGroup: ["Korp", "Ormvråk", "Fiskgjuse", "Duvhök", "Sparvhök", "Kungsörn", "Havsörn"],
-      forestBirdsGroup: ["Tjäder", "Orre", "Järpe", "Dalripa", "Fjällripa"],
-      smallAndOtherReportableBirdsGroup: ["Ringduva", "Morkulla", "Rapphöna", "Fasan", "Kråka", "Kaja", "Skata", "Nötskrika", "Björktrast", "Trana", "Storskarv", "Fiskmås", "Gråtrut", "Havstrut"],
-      otherBirdsGroup: [], // For species not typically reported with counts, or if user wants to add some manually later
-      otherGroup: ["Bäver", "Bisam", "Mårdhund", "Säl"]
+      ungulatesGroup: ["Dovhjort", "Kronhjort", "Rådjur", "Vildsvin", "Älg"],
+      predatorsGroup: ["Björn", "Grävling", "Iller", "Mink", "Mård", "Rödräv", "Vessla"],
+      haresGroup: ["Fälthare", "Skogshare", "Vildkanin"],
+      waterBirdsGroup: ["Bläsand", "Bläsgås", "Grågås", "Gräsand", "Knipa", "Kricka", "Sjöorre", "Storskrake", "Sångsvan", "Vigg", "Vitkindad gås"],
+      birdsOfPreyGroup: ["Korp"],
+      forestBirdsGroup: ["Dalripa", "Fjällripa", "Järpe", "Orre", "Tjäder"],
+      smallBirdsGroup: ["Björktrast", "Fiskmås", "Gråtrut", "Havstrut", "Kaja", "Kråka", "Morkulla", "Nötskrika", "Rapphöna", "Ringduva", "Skata", "Storskarv", "Trana"],
+      otherBirdsGroup: ["Fasan", "Kanadagås"],
+      otherGroup: ["Bäver"]
     };
 
     // Function to dynamically create weight input fields
@@ -296,14 +298,13 @@
           weightInputDiv.className = 'weight-input-item';
 
           const label = document.createElement('label');
-          label.textContent = `Vikt ${sex ? sex.toLowerCase() : ''} ${i}:`; // Add sex to label if available
+          label.textContent = `Vikt ${sex ? sex.toLowerCase() : ''} ${i}:`; 
           
-          // Unique name for each weight input: SpeciesName_Sex_Vikt_Index
           const inputName = `${speciesName}_${sex}_Vikt_${i}`;
           const input = document.createElement('input');
           input.type = 'number';
           input.min = '0';
-          input.step = 'any'; // Allow decimal weights
+          input.step = 'any'; 
           input.name = inputName;
           input.placeholder = 'kg';
           input.className = 'weight-field';
@@ -328,10 +329,9 @@
         animalDiv.className = "animal";
 
         const img = document.createElement("img");
-        const iconFilename = filenameMap[speciesName] || speciesName.toLowerCase(); // Fallback if not in map
+        const iconFilename = filenameMap[speciesName] || speciesName.toLowerCase(); 
         img.src = `ikoner_vvo/${iconFilename}.png`;
         img.alt = speciesName;
-        // Simple fallback for missing images
         img.onerror = function() { this.src = 'https://placehold.co/48x48/ccc/000?text=?'; this.alt = `${speciesName} (bild saknas)`; };
 
 
@@ -347,13 +347,13 @@
 
         const speciesConfig = detailedSpeciesInfo[speciesName];
 
-        if (speciesConfig && speciesConfig.sexes) { // Species with sex and potentially weight
+        if (speciesConfig && speciesConfig.sexes) { 
           speciesConfig.sexes.forEach(sex => {
             const sexCategoryDiv = document.createElement("div");
             sexCategoryDiv.className = "sex-category";
 
             const label = document.createElement("label");
-            label.textContent = sex + ":"; // e.g., "Handjur:"
+            label.textContent = sex + ":"; 
             
             const countInput = document.createElement("input");
             countInput.type = "number";
@@ -361,28 +361,27 @@
             countInput.value = "0";
             countInput.name = `${speciesName}_${sex}`;
             countInput.className = "sex-count-input";
-            countInput.dataset.species = speciesName; // Store for event listener
-            countInput.dataset.sex = sex;           // Store for event listener
+            countInput.dataset.species = speciesName; 
+            countInput.dataset.sex = sex;           
 
-            label.appendChild(countInput); // Nest input within label or place side-by-side
+            label.appendChild(countInput); 
             sexCategoryDiv.appendChild(label);
 
 
             if (speciesConfig.hasWeight) {
               const weightsContainer = document.createElement("div");
               weightsContainer.className = "weight-inputs-container";
-              weightsContainer.id = `${speciesName}_${sex}_weights`; // Unique ID for weight inputs
+              weightsContainer.id = `${speciesName}_${sex}_weights`; 
               sexCategoryDiv.appendChild(weightsContainer);
 
               countInput.addEventListener('input', (event) => {
                 const currentCount = parseInt(event.target.value) || 0;
-                // Use dataset attributes to get species and sex
                 updateWeightInputs(event.target.dataset.species, event.target.dataset.sex, currentCount, weightsContainer.id);
               });
             }
             detailsDiv.appendChild(sexCategoryDiv);
           });
-        } else { // Species with single "Antal" input
+        } else { 
           const countCategoryDiv = document.createElement("div");
           countCategoryDiv.className = "count-category";
           
@@ -405,9 +404,9 @@
       });
     }
 
-    // Handle form submission to create a detailed HTML report
+    // Handle form submission
     document.querySelector("form").addEventListener("submit", function (e) {
-      e.preventDefault(); // Prevent default submission temporarily
+      e.preventDefault(); 
       const formData = new FormData(this);
       const reporterName = formData.get("name") || "Okänd rapportör";
 
@@ -416,9 +415,9 @@
       for (const [groupId, speciesList] of Object.entries(animalsByGroup)) {
         speciesList.forEach(speciesName => {
           const speciesConfig = detailedSpeciesInfo[speciesName];
-          let speciesDetails = []; // To hold strings like "2 handjur (Vikt: 120 kg, Vikt: 130 kg)"
+          let speciesDetails = []; 
 
-          if (speciesConfig && speciesConfig.sexes) { // Sex-differentiated species
+          if (speciesConfig && speciesConfig.sexes) { 
             let totalForSpecies = 0;
             speciesConfig.sexes.forEach(sex => {
               const count = parseInt(formData.get(`${speciesName}_${sex}`)) || 0;
@@ -441,7 +440,7 @@
             if (totalForSpecies > 0) {
               reportEntries.push(`<strong>${speciesName}:</strong> ${speciesDetails.join('; ')}`);
             }
-          } else { // Single "Antal" species
+          } else { 
             const count = parseInt(formData.get(`${speciesName}_Antal`)) || 0;
             if (count > 0) {
               reportEntries.push(`<strong>${speciesName}:</strong> ${count} st`);
@@ -460,18 +459,15 @@
         reportHtmlBody = `${reporterName} har inte rapporterat in något skjutet/observerat vilt denna gång.`;
       }
       
-      // Create a hidden input for the HTML content for formsubmit.co
-      // This allows sending a nicely formatted HTML email.
       let hiddenHTMLInput = this.querySelector('input[name="_html"]');
       if (!hiddenHTMLInput) {
           hiddenHTMLInput = document.createElement("input");
           hiddenHTMLInput.type = "hidden";
-          hiddenHTMLInput.name = "_html"; // formsubmit.co specific field for HTML email body
+          hiddenHTMLInput.name = "_html"; 
           this.appendChild(hiddenHTMLInput);
       }
       hiddenHTMLInput.value = `<div style="font-family: Arial, sans-serif; line-height: 1.6;">${reportHtmlBody}</div>`;
       
-      // Optionally, set a subject
       let subjectInput = this.querySelector('input[name="_subject"]');
       if (!subjectInput) {
           subjectInput = document.createElement("input");
@@ -481,20 +477,7 @@
       }
       subjectInput.value = `Viltrapport från ${reporterName} - Leksands Norra VVO`;
 
-
-      // You might want to add other formsubmit.co settings like _captcha or _next
-      // e.g., for a "thank you" page:
-      // let nextInput = this.querySelector('input[name="_next"]');
-      // if (!nextInput) {
-      //     nextInput = document.createElement("input");
-      //     nextInput.type = "hidden";
-      //     nextInput.name = "_next";
-      //     this.appendChild(nextInput);
-      // }
-      // nextInput.value = "https://yourdomain.com/thankyou.html";
-
-
-      this.submit(); // Now submit the form with the added hidden field
+      this.submit(); 
     });
   </script>
 </body>
